@@ -3,6 +3,7 @@ import Fastify, {type FastifyInstance} from 'fastify'
 // import {setupRoutes} from "./routes.js";
 import supabasePlugin from "./supabase.js";
 import cors from '@fastify/cors';
+import {setupRoutes} from "./routes.js";
 
 
 const FRONTEND_URL: string | undefined = process.env.FRONTEND_URL;
@@ -25,7 +26,7 @@ const start = async () => {
             methods: ["GET", "POST"],
         });
         await fastify.register(supabasePlugin)
-        // setupRoutes(fastify);
+        setupRoutes(fastify);
         await fastify.listen({port: 8000})
     } catch (err) {
         fastify.log.error(err)
