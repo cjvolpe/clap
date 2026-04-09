@@ -1,6 +1,7 @@
 export interface Climb {
     name: string;
     difficulty: string;
+    type: string;
     color: Color;
     setter: string;
     dateSet: Date;

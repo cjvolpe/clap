@@ -3,6 +3,7 @@
 // external
 import type {FastifyInstance} from "fastify";
 import type {BaseReply, Failure, ReplyConfig, Task, Process, Climb} from "../../frontend/src/lib/types.ts";
+import * as url from "node:url";
 
 // internal
 
@@ -12,36 +13,76 @@ const exampleFilters: Record<string, any> = {
     // color: "Red",
     type: "Top Rope"
 }
-
+//TODO: add post request for claiming a set climb, and ticking a climb
 export function setupRoutes(server: FastifyInstance) {
     server.get<{
         Reply: any[] | { error: string };
-    }>("/newclimbs", async (request, reply) => {
-        console.log("request.body = ")
-        console.log(request.body);
-        const twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(twoWeeksAgo.getDate()-14);
-        let query = server.supabase.from("climbs")
-            .select("*").gte({'date_set':twoWeeksAgo});
-
+    }>("/featured", async (request, reply) => {
         // for (const key in exampleFilters) {
         //     query = query.eq(key, exampleFilters[key])
         // }
 
-        const {data, error} = await query;
-        if (error) {
-            return reply.status(500).send(error);
-        }
-        return data;
+        const {reply: result, code} = await packageResponse(() => handleFeaturedClimbs());
+
+        return reply.status(code).send(result);
     });
     server.post<{
         Body: Climb;
         Reply: BaseReply<void>;
 
-    }>("/search", async (req, res) => {
-        const {reply, code} = await packageResponse(() => handleSearch(req.body));
+    }>("/climbs", async (req, res) => {
+        const {reply, code} = await packageResponse(() => handleNewClimb(req.body));
         res.status(code).send(reply);
     });
+
+    server.patch('/climbs/archive/:id', async (req, res) => {
+        const {reply, code} = await packageResponse(() => handleArchive(req.params));
+        res.status(code).send(reply);
+
+    })
+
+    async function handleFeaturedClimbs(): Promise<Task> {
+        const twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+        const query = server.supabase.from("climbs")
+            .select("*").gte('date_set', twoWeeksAgo.toISOString()).order("date_set", {ascending: false});
+        const {data, error} = await query;
+        if (error) {
+            return {success: false, error: error, code: 500};
+        }
+        return {success: true, data: data};
+
+    }
+//TODO: Handle pictures & fix date for postman
+    async function handleNewClimb(req: Climb): Promise<Task> {
+        const {name, difficulty, type, color, setter, dateSet, gym} = req;
+        const {data, error} = await server.supabase.from("climbs").insert([
+            {
+                name: name,
+                difficulty: difficulty,
+                type: type,
+                color: color,
+                setter: setter,
+                date_set: dateSet,
+                gym: gym,
+            }
+        ]).select();
+        if (error) {
+            return {success: false, error: error, code: 500};
+        }
+        return {success: true, data: data};
+    }
+
+    async function handleArchive(params:{id?: string}): Promise<Task> {
+        const {id} = params;
+        const {data, error} = await server.supabase.from("climbs").update({archived: true}).eq("id",id).select();
+        if (error) {
+            return {success: false, error: error, code: 500};
+        }
+        return {success: true, data: data};
+
+    }
+
 
     async function packageResponse<O>(handler: () => Promise<Process<O>>,): Promise<ReplyConfig<O>> {
         const result = await handler();
