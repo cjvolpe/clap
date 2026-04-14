@@ -1,0 +1,19 @@
+.home-row{
+    display: flex;
+    flex-direction: row;
+    border-top: 2px solid black;
+    margin: 32px;
+    position: fixed;
+    bottom: 0;
+}
+.home-button{
+    margin-right: 32px;
+}
+.add-button{
+    margin-bottom: 32px;
+    border: 2px black solid;
+    border-radius: 50%;
+}
+.profile-button{
+    margin-left: 32px;
+}

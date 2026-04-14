@@ -2,8 +2,7 @@ import SearchBar from "../components/SearchBar.tsx";
 import "./styles/home.css"
 import HomeRow from "../components/HomeRow.tsx";
 
-export default function Home() {
-
+export default function Profile() {
 
 
     //
@@ -14,7 +13,7 @@ export default function Home() {
     //
     //         })
     //     })
-    //    
+    //
     //     const data = await respond.json()
     //
     //     setState(data)
@@ -23,7 +22,7 @@ export default function Home() {
 
     return (<div className={'home-page'}>
         <SearchBar/>
-
+        <p>profile</p>
         <HomeRow/>
     </div>)
 }
