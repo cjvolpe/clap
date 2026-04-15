@@ -14,9 +14,6 @@ import {
     BOULDER_GRADES
 } from "../../frontend/src/lib/types.ts";
 
-const ropeGrades: string[] = Object.keys(ROPE_GRADES);
-const boulderGrades: string[] = Object.keys(BOULDER_GRADES);
-
 //TODO: add post request for claiming a set climb, and ticking a climb
 export function setupRoutes(server: FastifyInstance) {
     server.get<{
@@ -97,11 +94,13 @@ export function setupRoutes(server: FastifyInstance) {
         return {success: true, data: data};
 
     }
+
 //TODO: remove for loop
     async function handleFilteredSearch(req: Search): Promise<Task> {
         const {name, lowerDifficulty, upperDifficulty, type, setter, color, startDate, endDate, gym, archived} = req;
         const query = server.supabase.from("climbs").select('*');
-        let gradeLock: boolean = false;
+        let boulderList: string[] = Object.keys(BOULDER_GRADES);
+        let ropeList: string[] = Object.keys(ROPE_GRADES);
         const filter: Record<string, any> = {
             name: name,
             lowerDifficulty: lowerDifficulty,
@@ -114,70 +113,60 @@ export function setupRoutes(server: FastifyInstance) {
             gym: gym,
             archived: archived,
         }
-        if (filter[lowerDifficulty] !== null && filter[upperDifficulty] !== null) {
-            let gradeList: string[] = [];
-            if (filter["type"] === "Top Rope") {
-                gradeList = Array.from(ropeGrades);
-                console.log(gradeList);
-                gradeList = sortByRopeGradeUpperLower(filter[lowerDifficulty], filter[upperDifficulty], gradeList);
 
-            } else if (filter["type"] === "Boulder") {
-                gradeList = Array.from(boulderGrades);
-                console.log(gradeList + "sdf");
-                gradeList = sortByBoulderGradeUpperLower(filter[lowerDifficulty], filter[upperDifficulty], gradeList);
-            }
-
-
-            console.log(gradeList);
-            query.in("difficulty", gradeList);
-            gradeLock = true;
-            console.log(gradeLock);
+        if (filter["name"] !== null) {
+            query.textSearch("name", filter["name"], {
+                config: "english",
+                type: "websearch"
+            });
         }
-        for (const key in filter) {
-            if (filter[key] === null) {
-                continue;
-            }
-            if (key === "name") {
-                query.textSearch("name", filter[key], {
-                    config: "english",
-                    type: "websearch"
-                });
-            } else if ((key === "lowerDifficulty" || key === "upperDifficulty") && !gradeLock) {
-                let gradeList: string[] = [];
+        if (filter["type"] !== null) {
+            query.eq('type', filter["type"]);
+            if (filter["lowerDifficulty"] !== null) {
                 if (filter["type"] === "Top Rope") {
-                    gradeList = Array.from(ropeGrades);
-                    console.log(gradeList);
-                    if (key === "lowerDifficulty") gradeList = sortByRopeGrade("lower", filter[key], gradeList);
-                    if (key === "upperDifficulty") gradeList = sortByRopeGrade("upper", filter[key], gradeList);
+                    ropeList = sortByGrade("Top Rope", "lower", filter["lowerDifficulty"], ropeList);
                 } else if (filter["type"] === "Boulder") {
-                    gradeList = Array.from(boulderGrades);
-                    console.log(gradeList);
-                    if (key === "lowerDifficulty") gradeList = sortByBoulderGrade("lower", filter[key], gradeList);
-                    if (key === "upperDifficulty") gradeList = sortByBoulderGrade("upper", filter[key], gradeList);
+                    boulderList = sortByGrade("Boulder", "lower", filter["lowerDifficulty"], boulderList);
                 }
-                console.log(gradeList);
-                query.in("difficulty", gradeList);
-            } else if (key === "type") {
-                query.eq('type', filter[key]);
-            } else if (key === "color") {
-                query.eq('color', filter[key]);
-            } else if (key === "setter") {
-                query.textSearch("setter", filter[key], {
-                    config: "english",
-                    type: "websearch"
-                });
-            } else if (key === "gym") {
-                query.eq('gym', filter[key]);
-            } else if (key === "archived") {
-                query.eq('archived', filter[key]);
-            } else if (key === "startDate") {
-                query.gte('startDate', filter[key]);
-            } else if (key === "endDate") {
-                query.lte('endDate', filter[key]);
+            }
+            if (filter["upperDifficulty"] !== null) {
+                if (filter["type"] === "Top Rope") {
+                    ropeList = sortByGrade("Top Rope", "upper", filter["upperDifficulty"], ropeList);
+                } else if (filter["type"] === "Boulder") {
+                    boulderList = sortByGrade("Boulder", "upper", filter["upperDifficulty"], boulderList);
+                }
+            }
+            console.log(ropeList);
+            if (filter["type"] === "Boulder") {
+                query.in("difficulty",boulderList);
+            }
+            else if (filter["type"] === "Top Rope") {
+                query.in("difficulty",ropeList);
             }
         }
+        if (filter["color"] !== null) {
+            query.eq('color', filter["color"]);
+        }
+        if (filter["setter"] !== null) {
+            query.textSearch("setter", filter["setter"], {
+                config: "english",
+                type: "websearch"
+            });
+        }
+        if (filter["gym"] !== null) {
+            query.eq('gym', filter["gym"]);
+        }
+        if (filter["archived"] !== null) {
+            query.eq('archived', filter["archived"]);
+        }
+        if (filter["startDate"] !== null) {
+            query.gte('startDate', filter["startDate"]);
+        }
+        if (filter["endDate"] !== null) {
+            query.lte('endDate', filter["endDate"]);
+        }
+
         const {data, error} = await query;
-        gradeLock = false;
         if (error) {
             return {success: false, error: error, code: 500};
         }
@@ -197,28 +186,20 @@ export function setupRoutes(server: FastifyInstance) {
         return {success: true, data: data};
     }
 
-    function sortByRopeGrade(bound: string, filterGrade: string, gradeList: string[]) {
-        if (bound === "lower") {
-            return gradeList.filter(grade => ROPE_GRADES[grade] >= ROPE_GRADES[filterGrade]);
-        } else if (bound === "upper") {
-            return gradeList.filter(grade => ROPE_GRADES[grade] <= ROPE_GRADES[filterGrade]);
+    function sortByGrade(type: string, bound: string, filterGrade: string, gradeList: string[]) {
+        if (type === "Top Rope") {
+            if (bound === "lower") {
+                return gradeList.filter(grade => ROPE_GRADES[grade] >= ROPE_GRADES[filterGrade]);
+            } else if (bound === "upper") {
+                return gradeList.filter(grade => ROPE_GRADES[grade] <= ROPE_GRADES[filterGrade]);
+            }
+        } else if (type === "Boulder") {
+            if (bound === "lower") {
+                return gradeList.filter(grade => BOULDER_GRADES[grade] >= BOULDER_GRADES[filterGrade]);
+            } else if (bound === "upper") {
+                return gradeList.filter(grade => BOULDER_GRADES[grade] <= BOULDER_GRADES[filterGrade]);
+            }
         }
-    }
-
-    function sortByBoulderGrade(bound: string, filterGrade: string, gradeList: string[]) {
-        if (bound === "lower") {
-            return gradeList.filter(grade => BOULDER_GRADES[grade] >= BOULDER_GRADES[filterGrade]);
-        } else if (bound === "upper") {
-            return gradeList.filter(grade => BOULDER_GRADES[grade] <= BOULDER_GRADES[filterGrade]);
-        }
-    }
-
-    function sortByRopeGradeUpperLower(lowerFilter: string, upperFilter: string, gradeList: string[]) {
-        return gradeList.filter(grade => ROPE_GRADES[lowerFilter] >= ROPE_GRADES[grade] <= ROPE_GRADES[upperFilter]);
-    }
-
-    function sortByBoulderGradeUpperLower(lowerFilter: string, upperFilter: string, gradeList: string[]) {
-        return gradeList.filter(grade => BOULDER_GRADES[lowerFilter] >= BOULDER_GRADES[grade] <= BOULDER_GRADES[upperFilter]);
     }
 
 
