@@ -1,28 +1,35 @@
-import SearchBar from "../components/SearchBar.tsx";
-import "./styles/home.css"
+import "./styles/profile.css"
 import HomeRow from "../components/HomeRow.tsx";
+import {supabaseClient} from "../util/supabaseClient.ts";
+import {useEffect, useState} from "react";
+import type {User} from "@supabase/supabase-js";
 
 export default function Profile() {
+    const [user, setUser] = useState<User>();
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const {data: {user}} = await supabaseClient.auth.getUser();
+            setUser(user);
+        }
+        fetchUser();
+    }, []);
+    const avatarUrl = user?.user_metadata?.avatar_url;
+    const userName = user?.user_metadata?.name;
+    return (<>
+            <div className={'home-page'}>
 
-    //
-    // async function submitFilters() {
-    //     const respond = await fetch("http://localhost:8000/newclimbs", {
-    //         method: "POST",
-    //         body: JSON.stringify({
-    //
-    //         })
-    //     })
-    //
-    //     const data = await respond.json()
-    //
-    //     setState(data)
-    // }
+                <p>profile</p>
+                <div className={'user-info'}>
+                    <img className={"profile-picture"} src={avatarUrl} alt={"user's profile picture"}/>
+                    <h1>{userName}</h1>
+                </div>
+                <div className={'logged-climbs'}>
 
-
-    return (<div className={'home-page'}>
-        <SearchBar/>
-        <p>profile</p>
-        <HomeRow/>
-    </div>)
+                </div>
+               
+            </div>
+            <HomeRow/>
+        </>
+    );
 }

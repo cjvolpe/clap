@@ -1,9 +1,11 @@
 import type {Climb} from "../lib/types.ts";
 import '../pages/styles/climbelement.css'
+import {useState} from "react";
 
 export default function ClimbElement({climb}: {climb: Climb}) {
     console.log("ClimbElement", climb);
     const {name, difficulty, type, color, setter, dateSet, gym}:Climb = climb;
+
     console.log("Date", dateSet);
     return (<div className={"climb-container"}>
         <div className={"climb-left-column"}>
@@ -24,7 +26,6 @@ export default function ClimbElement({climb}: {climb: Climb}) {
             <h1>{difficulty}</h1>
             <p>{dateSet}</p>
             <p>{color}</p>
-
         </div>
     </div>);
 

@@ -11,7 +11,7 @@ import {
     type Climb,
     type Search,
     ROPE_GRADES,
-    BOULDER_GRADES
+    BOULDER_GRADES, type Log
 } from "../../frontend/src/lib/types.ts";
 
 //TODO: add post request for claiming a set climb, and ticking a climb
@@ -51,12 +51,22 @@ export function setupRoutes(server: FastifyInstance) {
         const {reply, code} = await packageResponse(() => handleSearch(req.body));
         res.status(code).send(reply);
     });
+    server.post<{
+        Body: {
+            user: string,
+            climb: number
+        };
+        Reply: BaseReply<void>;
+    }>("/climbs/log", async (req, res) => {
+        const {reply, code} = await packageResponse(() => handleLog(req.body));
+        res.status(code).send(reply);
+    });
 
     async function handleFeaturedClimbs(): Promise<Task> {
         const twoWeeksAgo = new Date();
         twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
         const query = server.supabase.from("climbs")
-            .select("*").gte('date_set', twoWeeksAgo.toISOString()).order("date_set", {ascending: false});
+            .select("*").gte('date_set', twoWeeksAgo.toISOString()).eq("archived", false).order("date_set", {ascending: false});
         const {data, error} = await query;
         if (error) {
             return {success: false, error: error, code: 500};
@@ -65,7 +75,7 @@ export function setupRoutes(server: FastifyInstance) {
 
     }
 
-//TODO: Handle pictures & fix date for postman
+//TODO: Handle pictures
     async function handleNewClimb(req: Climb): Promise<Task> {
         const {name, difficulty, type, color, setter, dateSet, gym} = req;
         const {data, error} = await server.supabase.from("climbs").insert([
@@ -138,10 +148,9 @@ export function setupRoutes(server: FastifyInstance) {
             }
             console.log(ropeList);
             if (filter["type"] === "Boulder") {
-                query.in("difficulty",boulderList);
-            }
-            else if (filter["type"] === "Top Rope") {
-                query.in("difficulty",ropeList);
+                query.in("difficulty", boulderList);
+            } else if (filter["type"] === "Top Rope") {
+                query.in("difficulty", ropeList);
             }
         }
         if (filter["color"] !== null) {
@@ -200,6 +209,18 @@ export function setupRoutes(server: FastifyInstance) {
                 return gradeList.filter(grade => BOULDER_GRADES[grade] <= BOULDER_GRADES[filterGrade]);
             }
         }
+    }
+
+    async function handleLog(req: Log): Promise<Task> {
+        const {user, climb} = req;
+        const {data, error} = await server.supabase.from("completed_climbs").insert([{
+            climber: user,
+            climb: climb,
+        }]).select();
+        if (error) {
+            return {success: false, error: error, code: 500};
+        }
+        return {success: true, data: data};
     }
 
 

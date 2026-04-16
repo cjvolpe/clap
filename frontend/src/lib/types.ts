@@ -25,6 +25,11 @@ export interface Search {
     archived: boolean;
 }
 
+export interface Log{
+    user: string;
+    climb: number;
+}
+
 export const ROPE_GRADES: Record<string, number> = {
     "5.5": 5.55, "5.5+": 5.6,
     "5.6-": 5.6, "5.6": 5.65, "5.6+": 5.7,

@@ -8,6 +8,7 @@ export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
     const [featured, setFeatured] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [log, setLog] = useState<any>();
 
 
     useEffect(() => {
