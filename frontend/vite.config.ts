@@ -26,5 +26,12 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+  server: {
+    allowedHosts: [
+      'clapp.cjvolpe.dev'
+    ],
+    host: '0.0.0.0',
+    port: 5173
+  }
 });
