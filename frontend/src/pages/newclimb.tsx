@@ -1,6 +1,6 @@
 import "./styles/newclimb.css"
 import HomeRow from "../components/HomeRow.tsx";
-import {BOULDER_GRADES, type Climb, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
+import {BACKEND_URL, BOULDER_GRADES, type Climb, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
 import {useState} from "react";
 
 export default function NewClimb() {
@@ -17,7 +17,7 @@ export default function NewClimb() {
             gym: formData.get('gym') as string,
         }
         console.log(newClimb)
-        await fetch("http://localhost:8000/climbs/new", {
+        await fetch(`${BACKEND_URL}/climbs/new`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

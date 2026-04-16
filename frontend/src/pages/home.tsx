@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import ClimbElement from "../components/ClimbElement.tsx";
 import {supabaseClient} from "../util/supabaseClient.ts";
 import type {User} from "@supabase/supabase-js";
+import {BACKEND_URL} from "../lib/types.ts";
 
 export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
@@ -17,7 +18,7 @@ export default function Home() {
     useEffect(() => {
         const fetchClimbs = async () => {
             setLoading(true);
-            const response = await fetch("http://localhost:8000/featured");
+            const response = await fetch(`${BACKEND_URL}/featured`);
             const data = await response.json();
             if (data.success) {
                 setClimbs(data.data);
@@ -56,7 +57,7 @@ export default function Home() {
         if (!log) return;
 
 
-        const response = await fetch("http://localhost:8000/climbs/log", {
+        const response = await fetch(`${BACKEND_URL}/climbs/log`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({

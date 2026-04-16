@@ -30,6 +30,9 @@ export interface Log{
     climb: number;
 }
 
+export const BACKEND_URL: string = 'http://localhost:8000';
+export const FRONTEND_URL: string = 'http://localhost:5173';
+
 export const ROPE_GRADES: Record<string, number> = {
     "5.5": 5.55, "5.5+": 5.6,
     "5.6-": 5.6, "5.6": 5.65, "5.6+": 5.7,

@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import type {User} from "@supabase/supabase-js";
 import ClimbElement from "../components/ClimbElement.tsx";
 import './styles/profile.css'
+import {BACKEND_URL} from "../lib/types.ts";
 
 export default function Profile() {
     const [user, setUser] = useState<User>();
@@ -20,7 +21,7 @@ export default function Profile() {
                 }
                 setUser(user);
                 setLoading(true);
-                const response = await fetch(`http://localhost:8000/climbs/logged/${user.id}`);
+                const response = await fetch(`${BACKEND_URL}/climbs/logged/${user.id}`);
                 const data = await response.json();
                 if (data.success) setClimbs(data.data);
                 setLoading(false);
@@ -36,7 +37,7 @@ export default function Profile() {
 
         const fetchClimbs = async () => {
             setLoading(true);
-            const response = await fetch(`http://localhost:8000/climbs/logged/${user.id}`);
+            const response = await fetch(`${BACKEND_URL}/climbs/logged/${user.id}`);
             const data = await response.json();
             if (data.success) setClimbs(data.data);
             setLoading(false);

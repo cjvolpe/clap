@@ -1,5 +1,6 @@
 import { supabaseClient} from "../util/supabaseClient.ts";
 import "./styles/login.css";
+import {FRONTEND_URL} from "../lib/types.ts";
 
 export default function LoginPage() {
 
@@ -7,7 +8,7 @@ export default function LoginPage() {
         const {data, error} = await supabaseClient.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: "http://localhost:5173/home"
+                redirectTo: `${FRONTEND_URL}/home`
             }
         })
 
