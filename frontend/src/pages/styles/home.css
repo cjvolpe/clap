@@ -7,16 +7,16 @@
 .climbs{
     position: fixed;
     /*bottom: 8%;*/
-    top: 8%;
+    top: 7%;
     width: fit-content;
-    height: 86vh;
+    height: 84vh;
     overflow-y: scroll;
     scrollbar-width: none;
     z-index: -1;
 }
 .log-button{
     position: fixed;
-    bottom: 40px;
+    bottom: 44px;
     padding: 8px;
     border-radius: 16px;
     border: 2px solid black;
