@@ -1,20 +1,46 @@
-.home-page{
+@media only screen and (min-width: 600px) {
+    .climbs {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .climbs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media only screen and (min-width: 992px) {
+    .climbs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media only screen and (min-width: 1200px) {
+    .climbs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+.home-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-.climbs{
+
+.climbs {
     position: fixed;
-    /*bottom: 8%;*/
     top: 7%;
     width: fit-content;
     height: 84vh;
     overflow-y: scroll;
     scrollbar-width: none;
     z-index: -1;
+    padding: 16px;
 }
-.log-button{
+
+.log-button {
     position: fixed;
     bottom: 44px;
     padding: 8px;

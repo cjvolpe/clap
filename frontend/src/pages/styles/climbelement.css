@@ -1,18 +1,31 @@
+@media (min-width:600px){
+    .climb-container{
+        height: fit-content;
+
+    }
+}
+@media (min-width:768px){
+    .climb-container{
+        height: 150px;
+        gap:0;
+    }
+}
 .climb-container{
     display: flex;
     border: 2px solid black;
     border-radius: 16px;
-    margin: 4px;
     width: 280px;
+    margin: 8px;
+
 }
 .climb-container.highlighted{
     outline: 3px solid #3498db;
     outline-offset: 2px;
     border-color: #3498db;
-    background-color: #f0f8ff;
 }
 h1{
     margin:6px;
+    font-size:24px;
 }
 p{
     margin:4px;
@@ -31,6 +44,9 @@ p{
     padding: 2px;
     margin-left: 4px;
     border-radius:18px;
+    width: 66%;
+    overflow: auto;
+    scrollbar-width: none;
 }
 .climb-right-column{
     display: flex;

@@ -71,14 +71,19 @@ export default function Home() {
     };
 
     return (<div className={'home-page'}>
-        <SearchBar onSearch={onSearch}/>
+
+            <SearchBar onSearch={onSearch}/>
+
+
         <div className={"climbs"}>
             {climbs.length > 0 ? (climbs.map((climb) => (
-                    <ClimbElement key={climb.id} climbId={climb.id} climb={climb} onLog={onLog} isSelected={log === climb.id}/>
-                ))
+                <div className={'climb'} key={climb.id}>
+                    <ClimbElement key={climb.id} climbId={climb.id} climb={climb} onLog={onLog}
+                                  isSelected={log === climb.id}/>
+                </div> ))
             ) : (loading ? (<p>Loading...</p>) : (<p>No climbs found</p>))}
-
         </div>
+
         <button
             className="log-button"
             onClick={handleLogSubmit}
@@ -86,6 +91,9 @@ export default function Home() {
         >
             Log Climb
         </button>
-        <HomeRow/>
+        <div className={'home-row'}>
+            <HomeRow/>
+        </div>
+
     </div>);
 }

@@ -16,12 +16,12 @@ export default defineConfig({
           {
             src: './src/lib/resources/clapping-hands.svg',
             sizes: '192x192',
-            type: 'image/svg'
+            type: 'image/svg+xml'
           },
           {
             src: './src/lib/resources/clapping-hands.svg',
             sizes: '512x512',
-            type: 'image/svg'
+            type: 'image/svg+xml'
           }
         ]
       }

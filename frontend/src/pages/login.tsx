@@ -21,6 +21,8 @@ export default function LoginPage() {
             <div className="login-page">
                 <h1>Clapp</h1>
                 <h4>UNC's Mountain Project</h4>
+                <img src={"src/lib/resources/clapping-hands.svg"} alt={"clapping hands (icon)"} width={"128px"} height={"128px"} />
+
                 <button className="google-btn" onClick={signInWithGoogle}>
                     <div className="google-icon-wrapper">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
