@@ -1,4 +1,4 @@
-.home-row{
+.home-row {
     display: flex;
     flex-direction: row;
     border-top: 2px solid black;
@@ -9,13 +9,61 @@
     align-items: center;
     justify-content: center;
 }
-.home-button{
+
+.home-button {
+    display: flex;
+    flex-direction: row;
     margin-right: 6vw;
 
 }
-.add-button{
 
+.add-button {
+    display: flex;
+    flex-direction: row;
 }
-.profile-button{
+
+.profile-button {
     margin-left: 6vw;
+    display: flex;
+    flex-direction: row;
 }
+
+.home-row p {
+    visibility: hidden;
+}
+
+@media only screen and (min-width: 1600px) {
+    .home-row {
+        top: 0;
+        left: 0;
+        height: 100%;
+        bottom: auto;
+        flex-direction: column;
+        width: 150px;
+        gap: 40px;
+        align-items: flex-start;
+        margin-left: 20px;
+        border-top: none;
+        border-right: 2px solid #5B6670;
+
+    }
+
+    .home-row p {
+        visibility: visible;
+    }
+
+    .home-button {
+
+        margin-right: 0;
+
+    }
+
+    .add-button {
+    }
+    }
+
+    .profile-button {
+        margin-left: 0;
+
+
+    }

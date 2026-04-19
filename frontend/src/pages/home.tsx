@@ -36,6 +36,20 @@ export default function Home() {
         fetchClimbs();
         fetchUser();
     }, []);
+    useEffect(() => {
+        const handleClick = (event: MouseEvent)=>{
+            const target = event.target as HTMLElement;
+            if(!target.closest('.climb') && !target.closest('.log-button')){
+                setLog(null);
+            }
+        };
+        if(log){
+            document.addEventListener("click", handleClick);
+        }
+        return () => {
+            document.removeEventListener("click", handleClick);
+        }
+    }, [log]);
 
     const onSearch = (data) => {
         setLoading(true);
