@@ -9,10 +9,12 @@ import {BACKEND_URL} from "../lib/types.ts";
 
 export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
+    const [allClimbs, setAllClimbs] = useState<any[]>([]);
     const [featured, setFeatured] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [log, setLog] = useState<any>();
     const [user, setUser] = useState<User>();
+    const [search, setSearch] = useState("");
 
 
     useEffect(() => {
@@ -33,17 +35,29 @@ export default function Home() {
             const {data: {user}} = await supabaseClient.auth.getUser();
             setUser(user);
         }
+        const fetchAllClimbs = async () => {
+            const searchResults = await fetch(`${BACKEND_URL}/climbs`);
+            const data = await searchResults.json();
+            if (data.success) {
+                console.log("all climbs: ", data.data);
+                setAllClimbs(data.data);
+            } else {
+                console.log("Failed to fetch all climbs: ", data.error);
+            }
+
+        }
         fetchClimbs();
         fetchUser();
+        fetchAllClimbs();
     }, []);
     useEffect(() => {
-        const handleClick = (event: MouseEvent)=>{
+        const handleClick = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
-            if(!target.closest('.climb') && !target.closest('.log-button')){
+            if (!target.closest('.climb') && !target.closest('.log-button')) {
                 setLog(null);
             }
         };
-        if(log){
+        if (log) {
             document.addEventListener("click", handleClick);
         }
         return () => {
@@ -51,13 +65,18 @@ export default function Home() {
         }
     }, [log]);
 
-    const onSearch = (data) => {
+    const onSearch = async (query: string) => {
         setLoading(true);
-        if (data === null) {
+        if (query === null) {
             console.log("No featured climbs found");
             setClimbs(featured);
         } else {
-            setClimbs(data.data);
+            const filteredClimbs = allClimbs.filter((climb) => {
+                return climb.name.toLowerCase().includes(query.toLowerCase()) || climb.setter.toLowerCase().includes(query.toLowerCase());
+            });
+            console.log(filteredClimbs);
+            setClimbs(filteredClimbs);
+
         }
         setLoading(false);
     };
@@ -86,15 +105,14 @@ export default function Home() {
 
     return (<div className={'home-page'}>
 
-            <SearchBar onSearch={onSearch}/>
-
+        <SearchBar onSearch={onSearch}/>
 
         <div className={"climbs"}>
             {climbs.length > 0 ? (climbs.map((climb) => (
-                <div className={'climb'} key={climb.id}>
+
                     <ClimbElement key={climb.id} climbId={climb.id} climb={climb} onLog={onLog}
                                   isSelected={log === climb.id}/>
-                </div> ))
+                ))
             ) : (loading ? (<p>Loading...</p>) : (<p>No climbs found</p>))}
         </div>
 

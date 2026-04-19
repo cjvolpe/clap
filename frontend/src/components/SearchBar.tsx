@@ -1,26 +1,22 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import "./../pages/styles/SearchBar.css";
 import {BACKEND_URL} from "../lib/types.ts";
 
 export default function SearchBar({onSearch}) {
     const [search, setSearch] = useState('');
+    useEffect(() => {
+        const searchAction = async () => {
 
-    const searchAction = async () => {
-        const searchResults = await fetch(`${BACKEND_URL}/climbs/search`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({search: search}),
-        });
-        const data = await searchResults.json();
-        console.log('search', data);
-        if (search === "") {
-            onSearch(null);
-        } else {
-            onSearch(data);
-        }
-    };
+            console.log('search', search);
+            if (search === "") {
+                onSearch(null);
+            } else {
+                onSearch(search);
+            }
+        };
+        searchAction();
+    }, [search]);
+
 
     return (
         <div className={"search-bar"}>
@@ -29,12 +25,12 @@ export default function SearchBar({onSearch}) {
                 <path
                     d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
             </svg>
-            <form action={searchAction}>
+            <form>
                 <br/>
                 <input
                     type="search"
                     name="search"
-                    placeholder="Search"
+                    placeholder="Search by Route Name or Setter"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />

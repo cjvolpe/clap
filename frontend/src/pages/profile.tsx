@@ -54,9 +54,9 @@ export default function Profile() {
                     <img className={"profile-picture"} src={avatarUrl} alt={"user's profile picture"}/>
                     <h1>{userName}</h1>
                 </div>
-
+                <h1>Completed Climbs</h1>
                 <div className={'logged-climbs'}>
-                    <h1>Completed Climbs</h1>
+
                     <div className={"climbs-profile"}>
                         {climbs.length > 0 ? (climbs.map((climb) => (
                                 <ClimbElement key={climb.id} climbId={climb.id} climb={climb.climbs} onLog={() => {

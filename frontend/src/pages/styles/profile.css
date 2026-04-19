@@ -4,15 +4,44 @@
     align-items: center;
     justify-content: center;
 }
-.logged-climbs{
-
+.user-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
-.climbs-profile{
+.user-info img{
+    border-radius: 50%;
+}
+.logged-climbs{
+    top: 20%;
     position: fixed;
-    left: 39%;
     width: fit-content;
-    height: fit-content;
+    height: 78vh;
     overflow-y: scroll;
     scrollbar-width: none;
     z-index: -1;
+}
+@media only screen and (min-width: 600px) {
+    .climbs-profile {
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media only screen and (min-width: 768px) {
+    .climbs-profile {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media only screen and (min-width: 992px) {
+    .climbs-profile {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media only screen and (min-width: 1200px) {
+    .climbs-profile {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
 }

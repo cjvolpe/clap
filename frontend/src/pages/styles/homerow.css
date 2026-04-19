@@ -37,7 +37,7 @@
     display: none;
 }
 
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1500px) {
     .home-row {
         top: 0;
         left: 0;

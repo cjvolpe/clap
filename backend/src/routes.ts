@@ -57,13 +57,7 @@ export function setupRoutes(server: FastifyInstance) {
         const {reply, code} = await packageResponse(() => handleFilteredSearch(req.body));
         res.status(code).send(reply);
     });
-    server.post<{
-        Body: string;
-        Reply: BaseReply<void>;
-    }>("/climbs/search", async (req, res) => {
-        const {reply, code} = await packageResponse(() => handleSearch(req.body));
-        res.status(code).send(reply);
-    });
+
     //TODO: prevent climbs from being logged twice
     server.post<{
         Body: {
@@ -147,7 +141,6 @@ export function setupRoutes(server: FastifyInstance) {
         let boulderList: string[] = Object.keys(BOULDER_GRADES);
         let ropeList: string[] = Object.keys(ROPE_GRADES);
         const filter: Record<string, any> = {
-            name: name,
             lowerDifficulty: lowerDifficulty,
             upperDifficulty: upperDifficulty,
             type: type,
@@ -157,13 +150,6 @@ export function setupRoutes(server: FastifyInstance) {
             endDate: endDate,
             gym: gym,
             archived: archived,
-        }
-
-        if (filter["name"] !== null) {
-            query.textSearch("name", filter["name"], {
-                config: "english",
-                type: "websearch"
-            });
         }
         if (filter["type"] !== null) {
             query.eq('type', filter["type"]);
@@ -211,19 +197,6 @@ export function setupRoutes(server: FastifyInstance) {
         }
 
         const {data, error} = await query;
-        if (error) {
-            return {success: false, error: error, code: 500};
-        }
-        return {success: true, data: data};
-    }
-
-    async function handleSearch(req: string): Promise<Task> {
-        const searchTerm: string = `${req.search}:*`;
-        console.log(searchTerm);
-        const {
-            data,
-            error
-        } = await server.supabase.from("climbs").select('*').or(`name.wfts.${searchTerm},setter.wfts.${searchTerm}`);
         if (error) {
             return {success: false, error: error, code: 500};
         }
