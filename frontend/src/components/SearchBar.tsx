@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import "./../pages/styles/SearchBar.css";
 import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
 
-export default function SearchBar({onSearch,onFilter}) {
+export default function SearchBar({onSearch, onFilter}) {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
@@ -17,8 +17,6 @@ export default function SearchBar({onSearch,onFilter}) {
         };
         searchAction();
     }, [search]);
-
-
 
 
     return (
@@ -36,9 +34,15 @@ export default function SearchBar({onSearch,onFilter}) {
                     placeholder="Search by Route Name or Setter"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                        }
+                    }}
                 />
             </form>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter" onClick={onFilter}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter"
+                 onClick={onFilter}
                  viewBox="0 0 16 16">
                 <path
                     d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>

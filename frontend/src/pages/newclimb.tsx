@@ -25,6 +25,7 @@ export default function NewClimb() {
             body: JSON.stringify(newClimb),
         });
 
+
     };
 
 
@@ -63,8 +64,7 @@ export default function NewClimb() {
                     <select name="color" required={true} onChange={e => setColor(e.target.value)}>
                         {Object.keys(ROUTE_COLORS).map((color) => (<option value={color}>{color}</option>))}
                     </select>
-                    <div className={"cool-circle"} style={{backgroundColor: ROUTE_COLORS[color]}}></div>
-                    `
+                    <div className={"cooler-circle"} style={{backgroundColor: ROUTE_COLORS[color]}}></div>
                 </div>
 
 

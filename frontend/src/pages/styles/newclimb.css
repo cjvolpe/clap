@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 16px;
+    margin-bottom: 32px;
 }
 
 .color-selector {
@@ -41,7 +42,10 @@
     margin: 8px;
     background-color: #ECEDED;
     padding: 6px 10px;
-    width: fit-content;
+    width: 100%;
+}
+.color-container select{
+    width: ;
 }
 
 .add-form-button {
@@ -54,7 +58,7 @@
     background-color: #ECEDED;
     padding: 6px 10px;
     border: 2px solid black;
-    width: fit-content;
+
 }
 
 .add-page h1 {
@@ -68,5 +72,9 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    margin-right: 16px;
+}
+.color-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

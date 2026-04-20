@@ -49,8 +49,8 @@ p {
 }
 
 .climb-left-column {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
     padding: 2px;
     margin-left: 4px;
     border-radius: 18px;
@@ -60,12 +60,12 @@ p {
 }
 
 .climb-right-column {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
     margin-left: auto;
     border-radius: 18px;
     margin-right: 4px;
-    align-items: flex-end;
+    justify-items: end;
 }
 
 .climb-right-column h1 {
@@ -79,5 +79,6 @@ p {
 }
 
 .climb-right-column h4 {
-    padding: 8px;
+    padding: 8px 8px 0 8px;
+    height: fit-content;
 }
