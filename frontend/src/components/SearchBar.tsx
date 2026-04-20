@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import "./../pages/styles/SearchBar.css";
-import {BACKEND_URL} from "../lib/types.ts";
+import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
 
-export default function SearchBar({onSearch}) {
+export default function SearchBar({onSearch,onFilter}) {
     const [search, setSearch] = useState('');
+
     useEffect(() => {
         const searchAction = async () => {
 
@@ -16,6 +17,8 @@ export default function SearchBar({onSearch}) {
         };
         searchAction();
     }, [search]);
+
+
 
 
     return (
@@ -35,7 +38,7 @@ export default function SearchBar({onSearch}) {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </form>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter"
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter" onClick={onFilter}
                  viewBox="0 0 16 16">
                 <path
                     d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>

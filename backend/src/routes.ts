@@ -136,7 +136,7 @@ export function setupRoutes(server: FastifyInstance) {
 
 //TODO: remove for loop
     async function handleFilteredSearch(req: Search): Promise<Task> {
-        const {name, lowerDifficulty, upperDifficulty, type, setter, color, startDate, endDate, gym, archived} = req;
+        const { lowerDifficulty, upperDifficulty, type, color, startDate, endDate, gym, archived} = req;
         const query = server.supabase.from("climbs").select('*');
         let boulderList: string[] = Object.keys(BOULDER_GRADES);
         let ropeList: string[] = Object.keys(ROPE_GRADES);
@@ -144,7 +144,6 @@ export function setupRoutes(server: FastifyInstance) {
             lowerDifficulty: lowerDifficulty,
             upperDifficulty: upperDifficulty,
             type: type,
-            setter: setter,
             color: color,
             startDate: startDate,
             endDate: endDate,
@@ -176,12 +175,6 @@ export function setupRoutes(server: FastifyInstance) {
         }
         if (filter["color"] !== null) {
             query.eq('color', filter["color"]);
-        }
-        if (filter["setter"] !== null) {
-            query.textSearch("setter", filter["setter"], {
-                config: "english",
-                type: "websearch"
-            });
         }
         if (filter["gym"] !== null) {
             query.eq('gym', filter["gym"]);

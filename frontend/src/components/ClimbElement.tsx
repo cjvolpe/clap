@@ -1,5 +1,6 @@
 import {type Climb, ROUTE_COLORS} from "../lib/types.ts";
 import '../pages/styles/climbelement.css'
+import {useState} from "react";
 
 interface ClimbElementProps {
     jsonClimb: Climb;

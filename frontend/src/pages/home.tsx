@@ -6,6 +6,7 @@ import ClimbElement from "../components/ClimbElement.tsx";
 import {supabaseClient} from "../util/supabaseClient.ts";
 import type {User} from "@supabase/supabase-js";
 import {BACKEND_URL} from "../lib/types.ts";
+import FilterClimbs from "../components/FilterClimbs.tsx";
 
 export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
@@ -14,6 +15,7 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [log, setLog] = useState<any>();
     const [user, setUser] = useState<User>();
+    const [filter,setFilter] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -84,6 +86,10 @@ export default function Home() {
         console.log(key);
         setLog(key);
     }
+    const onFilter = ()=>{
+        setFilter(!filter);
+
+    }
 
     const handleLogSubmit = async () => {
         if (!log) return;
@@ -104,7 +110,8 @@ export default function Home() {
 
     return (<div className={'home-page'}>
 
-        <SearchBar onSearch={onSearch}/>
+        <SearchBar onSearch={onSearch} onFilter={onFilter}/>
+        <FilterClimbs filter={filter} />
 
         <div className={"climbs"}>
 
@@ -118,7 +125,7 @@ export default function Home() {
         </div>
 
         <button
-            className="log-button"
+            className={`log-button ${filter ? 'hidden' : ''}`}
             onClick={handleLogSubmit}
             disabled={!log}
         >

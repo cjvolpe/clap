@@ -13,12 +13,10 @@ export interface Climb {
 }
 
 export interface Search {
-    name: string;
     lowerDifficulty: string;
     upperDifficulty: string;
     type: string;
     color: string;
-    setter: string;
     startDate: Date;
     endDate: Date;
     gym: string;
