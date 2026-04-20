@@ -5,7 +5,7 @@ import {useState} from "react";
 
 export default function NewClimb() {
     const [type, setType] = useState("Boulder");
-    // const [color, setColor] = useState("Red");
+    const [color, setColor] = useState("Red");
     const addClimbAction = async (formData: FormData) => {
         const newClimb = {
             name: formData.get('name') as string,
@@ -30,9 +30,9 @@ export default function NewClimb() {
 
     return (<div className={'add-page'}>
         <h1>Add New Climb</h1>
-        <form action={addClimbAction}>
-            <label>Climb Name:
-                <br/>
+        <form action={addClimbAction} className={'add-form'}>
+            <label>
+                <p>Climb Name:</p>
                 <input
                     type="text"
                     name="name"
@@ -40,32 +40,38 @@ export default function NewClimb() {
                     required={true}
                 />
             </label>
-            <br/>
-            <label>What type of climb is it:
-                <br/>
+
+            <label>
+                <p>What type of climb is it:</p>
                 <select name="type" onChange={e => setType(e.target.value)} required={true} defaultValue={"Boulder"}>
                     <option value={"Boulder"}>Boulder</option>
                     <option value={"Top Rope"}>Top Rope</option>
                 </select>
             </label>
-            <br/>
-            <label>What is the Climb Difficulty:
-                <br/>
+
+            <label>
+                <p>What is the Climb Difficulty:</p>
                 <select name="difficulty" required={true}>
                     {type === "Boulder" ? (Object.keys(BOULDER_GRADES).map((boulder) => (<option>{boulder}</option>))) :
                         (Object.keys(ROPE_GRADES).map((grade) => (<option value={grade}>{grade}</option>)))}
                 </select>
             </label>
-            <br/>
-            <label>What color are the holds?:
-                <br/>
-                <select name="color" required={true}>
-                    {Object.keys(ROUTE_COLORS).map((color) => (<option value={color}>{color}</option>))}
-                </select>
+
+            <label>
+                <p>What color are the holds?:</p>
+                <div className={'color-container'}>
+                    <select name="color" required={true} onChange={e => setColor(e.target.value)}>
+                        {Object.keys(ROUTE_COLORS).map((color) => (<option value={color}>{color}</option>))}
+                    </select>
+                    <div className={"cool-circle"} style={{backgroundColor: ROUTE_COLORS[color]}}></div>
+                    `
+                </div>
+
+
             </label>
-            <br/>
-            <label>Who set the climb:
-                <br/>
+
+            <label>
+                <p>Who set the climb:</p>
                 <input
                     type="text"
                     name="setter"
@@ -73,25 +79,25 @@ export default function NewClimb() {
                     required={true}
                 />
             </label>
-            <br/>
-            <label>When was the climb set:
-                <br />
+
+            <label>
+                <p>When was the climb set:</p>
                 <input
                     type="date"
                     name="dateSet"
                     placeholder="Enter Date"
                 />
             </label>
-            <br />
-            <label>Which gym is the climb in:
-                <br/>
+
+            <label>
+                <p>Which gym is the climb in:</p>
                 <select name="gym" required={true} defaultValue={"Fetzer"}>
                     <option value={"Fetzer"}>Fetzer</option>
                     <option value={"Ram's Head"}>Ram's Head</option>
                 </select>
             </label>
-            <br/>
-            <button type="submit">Submit</button>
+
+            <button className={'add-form-button'} type="submit">Submit</button>
         </form>
         <HomeRow/>
     </div>)
