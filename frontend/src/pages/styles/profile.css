@@ -6,6 +6,7 @@
 }
 
 .completed-climbs {
+    display: flex;
     border: 3px solid black;
     background-color: #ECEDED;
     padding: 4px;
@@ -25,7 +26,7 @@
 }
 
 .logged-climbs {
-    top: 25%;
+    top: 34%;
     position: fixed;
     width: fit-content;
     height: 78vh;
@@ -41,7 +42,7 @@
         height: 50vh;
     }
     .logged-climbs {
-        height: 68vh;
+        height: 54vh;
     }
 }
 @media only screen and (min-width: 381px) {
@@ -51,8 +52,8 @@
         height: 50vh;
     }
     .logged-climbs {
-        top:18%;
-        height: 77vh;
+        top:26.5%;
+        height: 64vh;
     }
 }
 @media only screen and (min-width: 600px) {

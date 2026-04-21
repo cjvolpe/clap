@@ -10,8 +10,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: #ECEDED;
-    box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.75);
+    background-color: #EDCDB7;
+    border: 2px black solid;
     border-radius: 16px;
     padding: 6px 10px;
     gap: 16px;

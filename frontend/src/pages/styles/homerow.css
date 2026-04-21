@@ -1,14 +1,15 @@
 .home-row {
     display: flex;
     flex-direction: row;
-    border-top: 2px solid black;
+    border-top: 3px solid black;
+    padding: 8px 0;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     align-items: center;
     justify-content: center;
-    background-color: #ECEDED;
+    background-color: #EDCDB7;
 }
 
 .home-button {
@@ -16,8 +17,6 @@
     flex-direction: row;
     align-items: center;
     margin-right: 10vw;
-
-
 }
 
 .add-button {
@@ -48,7 +47,7 @@
         gap: 30px;
         align-items: flex-start;
         border-top: none;
-        border-right: 2px solid #5B6670;
+        border-right: 3px solid black;
     }
 
     .home-row p {
