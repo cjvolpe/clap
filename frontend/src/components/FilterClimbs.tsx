@@ -3,10 +3,10 @@ import {useEffect, useState} from "react";
 import '../pages/styles/filterclimbs.css'
 
 export default function FilterClimbs({filter, onAdvSearch}) {
-    const [type, setType] = useState("");
+    const [type, setType] = useState("Any");
     const [upperDifficulty, setUpperDifficulty] = useState("V17");
-    const [color, setColor] = useState("");
-    const [gym, setGym] = useState("");
+    const [color, setColor] = useState("Any");
+    const [gym, setGym] = useState("Any");
     const [archived, setArchived] = useState<boolean>(false);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -22,7 +22,7 @@ export default function FilterClimbs({filter, onAdvSearch}) {
             gym: formData.get('gym') as string,
             archived: formData.get('archived') as boolean,
         }
-        if (newFilter.archived === null && newFilter.color === "" && newFilter.gym === "" && newFilter.type === "" && newFilter.startDate === "" && newFilter.endDate === "") {
+        if (newFilter.archived === null && newFilter.color === "Any" && newFilter.gym === "Any" && newFilter.type === "Any" && newFilter.startDate === "" && newFilter.endDate === "") {
             onAdvSearch(undefined);
             return;
         }
@@ -42,13 +42,13 @@ export default function FilterClimbs({filter, onAdvSearch}) {
                         <p>Type</p>
                         <select name="type" onChange={e => setType(e.target.value)}
                                 value={type}>
-                            <option value={""}></option>
+                            <option value={"Any"}>Any</option>
                             <option value={"Boulder"}>Boulder</option>
                             <option value={"Top Rope"}>Top Rope</option>
                         </select>
                     </label>
 
-                    <label className={"difficulty"} style={{visibility: type === "" ? "hidden" : "visible"}}>
+                    <label className={"difficulty"} style={{visibility: type === "Any" ? "hidden" : "visible"}}>
                         <p>Difficulty Range</p>
                         <select name="lowerDifficulty">
                             {type === "Boulder" ? (Object.keys(BOULDER_GRADES).map((boulder) => (
@@ -70,7 +70,7 @@ export default function FilterClimbs({filter, onAdvSearch}) {
                     <label className={"color"}>
                         <p>Color</p>
                         <select name="color" value={color} onChange={e => setColor(e.target.value)}>
-                            <option value={""}></option>
+                            <option value={"Any"}>Any</option>
                             {Object.keys(ROUTE_COLORS).map((color) => (
                                 <option value={color} key={"filter." + color}>{color}</option>))}
                         </select>
@@ -78,7 +78,7 @@ export default function FilterClimbs({filter, onAdvSearch}) {
                     <label className={"gym"}>
                         <p>Gym</p>
                         <select name="gym" value={gym} onChange={e => setGym(e.target.value)}>
-                            <option value={""}></option>
+                            <option value={"Any"}>Any</option>
                             <option value={"Fetzer"}>Fetzer</option>
                             <option value={"Ram's Head"}>Ram's Head</option>
                         </select>
@@ -121,12 +121,12 @@ export default function FilterClimbs({filter, onAdvSearch}) {
                             }}>Apply Filters
                     </button>
                     <button type="button" onClick={() => {
-                        setType("");
+                        setType("Any");
                         setUpperDifficulty("V17");
-                        setColor("");
+                        setColor("Any");
                         setStartDate("");
                         setEndDate("");
-                        setGym("");
+                        setGym("Any");
                         setArchived(false);
                         onAdvSearch(undefined);
                     }}>Clear Filters

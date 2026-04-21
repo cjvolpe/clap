@@ -45,7 +45,7 @@
 }
 
 .add-form-button {
-    border: 2px  black solid;
+    border: 2px black solid;
     border-radius: 16px;
     padding: 6px 10px;
     margin: 24px 0;
@@ -54,13 +54,9 @@
 }
 
 .add-form p {
-    /*border: 2px solid black;*/
-    /*background-color: #ECEDED;*/
-    /*padding: 6px 10px;*/
     font-weight: bold;
     width: 100%;
     margin: 16px 0 4px 0;
-
 }
 
 .add-page h1 {
@@ -82,4 +78,12 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+@media only screen and (min-width: 768px) {
+    .add-form-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 16px;
+    }
 }

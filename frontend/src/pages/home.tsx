@@ -1,12 +1,13 @@
 import SearchBar from "../components/SearchBar.tsx";
 import "./styles/home.css"
 import HomeRow from "../components/HomeRow.tsx";
-import {useEffect, useState} from "react";
+import {startTransition, useEffect, useOptimistic, useState} from "react";
 import ClimbElement from "../components/ClimbElement.tsx";
 import {supabaseClient} from "../util/supabaseClient.ts";
 import type {User} from "@supabase/supabase-js";
 import {BACKEND_URL, type Search} from "../lib/types.ts";
 import FilterClimbs from "../components/FilterClimbs.tsx";
+import {toast, ToastContainer} from "react-toastify";
 
 export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
@@ -18,10 +19,27 @@ export default function Home() {
     const [advSearch, setAdvSearch] = useState();
     const [filtering, setFiltering] = useState(false);
 
+    const handleClick = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        console.log("click: ", target);
+        if (!target.closest('.advanced-search-bar') && !target.closest('.search-bar')) {
+            setFilter(false);
+        }
+        if (!target.closest('.climb-container') && !target.closest('.log-button')) {
+            setLog(null);
+        }
+    };
+    // const [optimisticClimbs, setOptimisticClimbs] = useOptimistic(climbs, (climbs) => {
+    //         return climbs;
+    //     }
+    // );
+
 
     useEffect(() => {
         const fetchClimbs = async () => {
-            setLoading(true);
+                setLoading(true);
+
+            // console.log(optimisticClimbs);
             const response = await fetch(`${BACKEND_URL}/featured`);
             const data = await response.json();
             if (data.success) {
@@ -39,22 +57,11 @@ export default function Home() {
         }
         fetchClimbs();
         fetchUser();
-    }, []);
-
-    useEffect(() => {
-        const handleClick = (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
-            if (!target.closest('.climb-container') && !target.closest('.log-button')) {
-                setLog(null);
-            }
-        };
-        if (log) {
-            document.addEventListener("click", handleClick);
-        }
+        document.addEventListener("click", handleClick);
         return () => {
             document.removeEventListener("click", handleClick);
         }
-    }, [log]);
+    }, []);
 
     useEffect(() => {
         if (advSearch === undefined) {
@@ -128,8 +135,12 @@ export default function Home() {
                 climb: log,
             }),
         });
-        if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+            toast("Climb Successfully Logged", {autoClose: 2500});
             setLog(null);
+        } else{
+            toast.error("Failed to Log Climb",{autoClose: 2500});
         }
     };
 
@@ -137,6 +148,7 @@ export default function Home() {
 
         <SearchBar onSearch={onSearch} onFilter={onFilter} filtering={filtering}/>
         <FilterClimbs filter={filter} onAdvSearch={onAdvSearch}/>
+        <ToastContainer className={'toast'}/>
 
         <div className={"climbs"}>
 

@@ -1,7 +1,8 @@
 import "./styles/newclimb.css"
 import HomeRow from "../components/HomeRow.tsx";
-import {BACKEND_URL, BOULDER_GRADES, type Climb, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
+import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
 import {useState} from "react";
+import {toast, ToastContainer} from "react-toastify";
 
 export default function NewClimb() {
     const [type, setType] = useState("Boulder");
@@ -17,21 +18,28 @@ export default function NewClimb() {
             gym: formData.get('gym') as string,
         }
         console.log(newClimb)
-        await fetch(`${BACKEND_URL}/climbs/new`, {
+        const data = await fetch(`${BACKEND_URL}/climbs/new`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(newClimb),
         });
-
+        const response = await data.json();
+        if (response.success) {
+            toast("Climb successfully added!", {autoClose: 2500});
+        } else {
+            toast.error("Failed to Log Climb", {autoClose: 2500});
+        }
 
     };
 
 
     return (<div className={'add-page'}>
         <h1>Add New Climb</h1>
+        <ToastContainer className={'toast'}/>
         <form action={addClimbAction} className={'add-form'}>
+            <div className={'add-form-fields'}>
             <label>
                 <p>Climb Name:</p>
                 <input
@@ -96,6 +104,7 @@ export default function NewClimb() {
                     <option value={"Ram's Head"}>Ram's Head</option>
                 </select>
             </label>
+            </div>
 
             <button className={'add-form-button'} type="submit">Submit</button>
         </form>

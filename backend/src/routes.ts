@@ -150,7 +150,7 @@ export function setupRoutes(server: FastifyInstance) {
             gym: gym,
             archived: archived,
         }
-        if (filter["type"] !== "") {
+        if (filter["type"] !== "Any") {
             query.eq('type', filter["type"]);
             if (filter["lowerDifficulty"] !== null) {
                 if (filter["type"] === "Top Rope") {
@@ -173,10 +173,10 @@ export function setupRoutes(server: FastifyInstance) {
                 query.in("difficulty", ropeList);
             }
         }
-        if (filter["color"] !== "") {
+        if (filter["color"] !== "Any") {
             query.eq('color', filter["color"]);
         }
-        if (filter["gym"] !== "") {
+        if (filter["gym"] !== "Any") {
             query.eq('gym', filter["gym"]);
         }
         if (filter["archived"] !== null) {

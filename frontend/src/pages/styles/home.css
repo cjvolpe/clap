@@ -41,14 +41,12 @@ body {
 }
 
 .climbs {
-    position: fixed;
-    top: 7%;
     width: fit-content;
-    height: 82vh;
     overflow-y: scroll;
     scrollbar-width: none;
-    z-index: -1;
+    z-index: 1;
     padding: 8px;
+    margin: 56px 16px;
 }
 
 .log-button.hidden {
@@ -62,7 +60,12 @@ body {
     border-radius: 32px;
     font-weight: 600;
     font-size: 20px;
-
+    z-index: 4;
     background-color: #EDCDB7;
     border: 2px black solid;
 }
+
+/*.toast{*/
+/*    background: #EDCDB7 !important  ;*/
+/*    border: 2px black solid; !important;*/
+/*}*/

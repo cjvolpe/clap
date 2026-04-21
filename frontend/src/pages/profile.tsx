@@ -50,11 +50,14 @@ export default function Profile() {
     return (<>
             <div className={'profile-page'}>
 
-                <div className={'user-info'}>
-                    <img className={"profile-picture"} src={avatarUrl} alt={"user's profile picture"}/>
-                    <h1>{userName}</h1>
+                <div className={'heading'}>
+                    <div className={'user-info'}>
+                        <img className={"profile-picture"} src={avatarUrl} alt={"user's profile picture"}/>
+                        <h1>{userName}</h1>
+                    </div>
+                    <h1 className={"completed-climbs"}>Completed Climbs</h1>
                 </div>
-                <h1 className={"completed-climbs"}>Completed Climbs</h1>
+
                 <div className={'logged-climbs'}>
 
                     <div className={"climbs-profile"}>

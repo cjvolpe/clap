@@ -1,8 +1,10 @@
+
 .profile-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow-y: hidden;
 }
 
 .completed-climbs {
@@ -10,6 +12,12 @@
     border: 3px solid black;
     background-color: #EDCDB7;
     padding: 4px;
+    width: fit-content;
+}
+.heading{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .user-info {
@@ -19,6 +27,8 @@
     flex-direction: row;
     align-items: center;
     margin: 16px;
+
+
 }
 
 .user-info img {
@@ -26,39 +36,13 @@
 }
 
 .logged-climbs {
-    top: 34%;
-    position: fixed;
     width: fit-content;
-    height: 78vh;
     overflow-y: scroll;
     scrollbar-width: none;
     z-index: -1;
+    margin-bottom: 64px;
 }
-
-@media only screen and (max-width: 380px) {
-    .climbs-profile {
-        display: flex;
-        flex-direction: column;
-        height: 50vh;
-    }
-
-    .logged-climbs {
-        height: 54vh;
-    }
-}
-
-@media only screen and (min-width: 381px) {
-    .climbs-profile {
-        display: flex;
-        flex-direction: column;
-        height: 50vh;
-    }
-
-    .logged-climbs {
-        top: 26.5%;
-        height: 64vh;
-    }
-}
+.
 
 @media only screen and (min-width: 600px) {
     .climbs-profile {
@@ -88,3 +72,4 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+@media only screen and (min-width: 992px) {}
