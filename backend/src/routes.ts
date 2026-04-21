@@ -136,7 +136,7 @@ export function setupRoutes(server: FastifyInstance) {
 
 //TODO: remove for loop
     async function handleFilteredSearch(req: Search): Promise<Task> {
-        const { lowerDifficulty, upperDifficulty, type, color, startDate, endDate, gym, archived} = req;
+        const {lowerDifficulty, upperDifficulty, type, color, startDate, endDate, gym, archived} = req;
         const query = server.supabase.from("climbs").select('*');
         let boulderList: string[] = Object.keys(BOULDER_GRADES);
         let ropeList: string[] = Object.keys(ROPE_GRADES);
@@ -150,7 +150,7 @@ export function setupRoutes(server: FastifyInstance) {
             gym: gym,
             archived: archived,
         }
-        if (filter["type"] !== null) {
+        if (filter["type"] !== "") {
             query.eq('type', filter["type"]);
             if (filter["lowerDifficulty"] !== null) {
                 if (filter["type"] === "Top Rope") {
@@ -173,20 +173,20 @@ export function setupRoutes(server: FastifyInstance) {
                 query.in("difficulty", ropeList);
             }
         }
-        if (filter["color"] !== null) {
+        if (filter["color"] !== "") {
             query.eq('color', filter["color"]);
         }
-        if (filter["gym"] !== null) {
+        if (filter["gym"] !== "") {
             query.eq('gym', filter["gym"]);
         }
         if (filter["archived"] !== null) {
-            query.eq('archived', filter["archived"]);
+            query.or('archived.eq.true,archived.eq.false');
         }
-        if (filter["startDate"] !== null) {
-            query.gte('startDate', filter["startDate"]);
+        if (filter["startDate"] !== "") {
+            query.gte('date_set', filter["startDate"]);
         }
-        if (filter["endDate"] !== null) {
-            query.lte('endDate', filter["endDate"]);
+        if (filter["endDate"] !== "") {
+            query.lte('date_set', filter["endDate"]);
         }
 
         const {data, error} = await query;

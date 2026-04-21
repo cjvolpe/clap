@@ -1,17 +1,18 @@
-import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
+import {BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS, type Search} from "../lib/types.ts";
 import {useEffect, useState} from "react";
 import '../pages/styles/filterclimbs.css'
 
-export default function FilterClimbs({filter}) {
-    const [type, setType] = useState("Boulder");
+export default function FilterClimbs({filter, onAdvSearch}) {
+    const [type, setType] = useState("");
     const [upperDifficulty, setUpperDifficulty] = useState("V17");
-    const [color, setColor] = useState("Red");
-    const [gym, setGym] = useState("Fetzer");
+    const [color, setColor] = useState("");
+    const [gym, setGym] = useState("");
     const [archived, setArchived] = useState<boolean>(false);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const advancedSearch = async (formData: FormData) => {
-        const newFilter = {
+
+    const advancedSearch = (formData: FormData) => {
+        const newFilter: Search = {
             lowerDifficulty: formData.get('lowerDifficulty') as string,
             upperDifficulty: formData.get('upperDifficulty') as string,
             type: formData.get('type') as string,
@@ -21,15 +22,13 @@ export default function FilterClimbs({filter}) {
             gym: formData.get('gym') as string,
             archived: formData.get('archived') as boolean,
         }
-        await fetch(`${BACKEND_URL}/climbs/search/filter`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newFilter),
-        });
+        if (newFilter.archived === null && newFilter.color === "" && newFilter.gym === "" && newFilter.type === "" && newFilter.startDate === "" && newFilter.endDate === "") {
+            onAdvSearch(undefined);
+            return;
+        }
         console.log(newFilter);
-    }
+        onAdvSearch(newFilter);
+    };
     useEffect(() => {
         setUpperDifficulty(type === "Boulder" ? "V17" : "5.15+");
     }, [type]);
@@ -41,16 +40,17 @@ export default function FilterClimbs({filter}) {
                 <div className={'filter-r1'}>
                     <label>
                         <p>Type</p>
-                        <select name="type" onChange={e => setType(e.target.value)} required={true}
+                        <select name="type" onChange={e => setType(e.target.value)}
                                 value={type}>
+                            <option value={""}></option>
                             <option value={"Boulder"}>Boulder</option>
                             <option value={"Top Rope"}>Top Rope</option>
                         </select>
                     </label>
 
-                    <label className={"difficulty"}>
+                    <label className={"difficulty"} style={{visibility: type === "" ? "hidden" : "visible"}}>
                         <p>Difficulty Range</p>
-                        <select name="lowerDifficulty" required={true}>
+                        <select name="lowerDifficulty">
                             {type === "Boulder" ? (Object.keys(BOULDER_GRADES).map((boulder) => (
                                     <option>{boulder}</option>))) :
                                 (Object.keys(ROPE_GRADES).map((grade) => (
@@ -58,7 +58,7 @@ export default function FilterClimbs({filter}) {
                         </select>
                         to
                         <select name="upperDifficulty" defaultValue={upperDifficulty} value={upperDifficulty}
-                                onChange={(e) => setUpperDifficulty(e.target.value)} required={true}>
+                                onChange={(e) => setUpperDifficulty(e.target.value)}>
                             {type === "Boulder" ? (Object.keys(BOULDER_GRADES).map((boulder) => (
                                     <option>{boulder}</option>))) :
                                 (Object.keys(ROPE_GRADES).map((grade) => (
@@ -70,6 +70,7 @@ export default function FilterClimbs({filter}) {
                     <label className={"color"}>
                         <p>Color</p>
                         <select name="color" value={color} onChange={e => setColor(e.target.value)}>
+                            <option value={""}></option>
                             {Object.keys(ROUTE_COLORS).map((color) => (
                                 <option value={color} key={"filter." + color}>{color}</option>))}
                         </select>
@@ -77,6 +78,7 @@ export default function FilterClimbs({filter}) {
                     <label className={"gym"}>
                         <p>Gym</p>
                         <select name="gym" value={gym} onChange={e => setGym(e.target.value)}>
+                            <option value={""}></option>
                             <option value={"Fetzer"}>Fetzer</option>
                             <option value={"Ram's Head"}>Ram's Head</option>
                         </select>
@@ -110,15 +112,23 @@ export default function FilterClimbs({filter}) {
                            onChange={e => setArchived(e.target.value)}/>
                 </label>
                 <div className={'advanced-search-bar-buttons'}>
-                    <button type="submit">Apply Filters</button>
+                    <button type="submit"
+                            onSubmit={e => e.preventDefault()}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                }
+                            }}>Apply Filters
+                    </button>
                     <button type="button" onClick={() => {
-                        setType("Boulder");
+                        setType("");
                         setUpperDifficulty("V17");
-                        setColor("Red");
+                        setColor("");
                         setStartDate("");
                         setEndDate("");
-                        setGym("Fetzer");
+                        setGym("");
                         setArchived(false);
+                        onAdvSearch(undefined);
                     }}>Clear Filters
                     </button>
                 </div>

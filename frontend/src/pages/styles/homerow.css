@@ -51,7 +51,8 @@
     }
 
     .home-row p {
-        display: contents;
+        display: flex;
+        margin: 8px;
     }
 
     .home-button {

@@ -5,17 +5,18 @@ import {useEffect, useState} from "react";
 import ClimbElement from "../components/ClimbElement.tsx";
 import {supabaseClient} from "../util/supabaseClient.ts";
 import type {User} from "@supabase/supabase-js";
-import {BACKEND_URL} from "../lib/types.ts";
+import {BACKEND_URL, type Search} from "../lib/types.ts";
 import FilterClimbs from "../components/FilterClimbs.tsx";
 
 export default function Home() {
     const [climbs, setClimbs] = useState<any[]>([]);
-    const [allClimbs, setAllClimbs] = useState<any[]>([]);
     const [featured, setFeatured] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [log, setLog] = useState<any>();
     const [user, setUser] = useState<User>();
-    const [filter,setFilter] = useState<boolean>(false);
+    const [filter, setFilter] = useState<boolean>(false);
+    const [advSearch, setAdvSearch] = useState();
+    const [filtering, setFiltering] = useState(false);
 
 
     useEffect(() => {
@@ -36,21 +37,10 @@ export default function Home() {
             const {data: {user}} = await supabaseClient.auth.getUser();
             setUser(user);
         }
-        const fetchAllClimbs = async () => {
-            const searchResults = await fetch(`${BACKEND_URL}/climbs`);
-            const data = await searchResults.json();
-            if (data.success) {
-                console.log("all climbs: ", data.data);
-                setAllClimbs(data.data);
-            } else {
-                console.log("Failed to fetch all climbs: ", data.error);
-            }
-
-        }
         fetchClimbs();
         fetchUser();
-        fetchAllClimbs();
     }, []);
+
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
@@ -66,13 +56,29 @@ export default function Home() {
         }
     }, [log]);
 
+    useEffect(() => {
+        if (advSearch === undefined) {
+            setClimbs(featured)
+            setFiltering(false);
+            return;
+        }
+        setLoading(true);
+        setClimbs(advSearch);
+        setFiltering(true);
+        setLoading(false);
+    }, [advSearch]);
+
     const onSearch = async (query: string) => {
         setLoading(true);
         if (query === null) {
             console.log("No featured climbs found");
-            setClimbs(featured);
+            if (advSearch !== undefined) {
+                setClimbs(advSearch);
+            } else {
+                setClimbs(featured);
+            }
         } else {
-            const filteredClimbs = allClimbs.filter((climb) => {
+            const filteredClimbs = climbs.filter((climb) => {
                 return climb.name.toLowerCase().includes(query.toLowerCase()) || climb.setter.toLowerCase().includes(query.toLowerCase());
             });
             console.log(filteredClimbs);
@@ -86,9 +92,28 @@ export default function Home() {
         console.log(key);
         setLog(key);
     }
-    const onFilter = ()=>{
+    const onFilter = () => {
         setFilter(!filter);
 
+    }
+    const onAdvSearch = async (body: Search) => {
+        if (body === undefined) {
+            setAdvSearch(undefined);
+            return;
+        }
+        console.log("AdvSearch", body);
+        const response = await fetch(`${BACKEND_URL}/climbs/search/filter`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        console.log("adv return", data);
+        if (data.success) {
+            setAdvSearch(data.data);
+        } else {
+            console.log("Failed to fetch all search results: ", data.error);
+        }
     }
 
     const handleLogSubmit = async () => {
@@ -110,8 +135,8 @@ export default function Home() {
 
     return (<div className={'home-page'}>
 
-        <SearchBar onSearch={onSearch} onFilter={onFilter}/>
-        <FilterClimbs filter={filter} />
+        <SearchBar onSearch={onSearch} onFilter={onFilter} filtering={filtering}/>
+        <FilterClimbs filter={filter} onAdvSearch={onAdvSearch}/>
 
         <div className={"climbs"}>
 

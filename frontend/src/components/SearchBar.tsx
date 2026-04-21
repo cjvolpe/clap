@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import "./../pages/styles/SearchBar.css";
 import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
 
-export default function SearchBar({onSearch, onFilter}) {
+export default function SearchBar({onSearch, onFilter, filtering}) {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
@@ -41,7 +41,8 @@ export default function SearchBar({onSearch, onFilter}) {
                     }}
                 />
             </form>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-filter"
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 className={`filter ${filtering ? 'enabled' : ''}`}
                  onClick={onFilter}
                  viewBox="0 0 16 16">
                 <path
