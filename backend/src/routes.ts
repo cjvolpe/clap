@@ -37,7 +37,7 @@ export function setupRoutes(server: FastifyInstance) {
 
     server.post<{
         Body: Climb;
-        Reply: BaseReply<void>;
+        Reply: BaseReply<any[]>;
 
     }>("/climbs/new", async (req, res) => {
         const {reply, code} = await packageResponse(() => handleNewClimb(req.body));
@@ -52,7 +52,7 @@ export function setupRoutes(server: FastifyInstance) {
 
     server.post<{
         Body: Search;
-        Reply: BaseReply<void>;
+        Reply: BaseReply<any[]>;
     }>("/climbs/search/filter", async (req, res) => {
         const {reply, code} = await packageResponse(() => handleFilteredSearch(req.body));
         res.status(code).send(reply);
