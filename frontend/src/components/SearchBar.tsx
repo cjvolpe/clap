@@ -1,9 +1,11 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import "./../pages/styles/SearchBar.css";
 import {BACKEND_URL, BOULDER_GRADES, ROPE_GRADES, ROUTE_COLORS} from "../lib/types.ts";
+import {FOCUS_SEARCH_EVENT} from "../lib/keyboardShortcuts.ts";
 
 export default function SearchBar({onSearch, onFilter, filtering}) {
     const [search, setSearch] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const searchAction = async () => {
@@ -18,6 +20,17 @@ export default function SearchBar({onSearch, onFilter, filtering}) {
         searchAction();
     }, [search]);
 
+    useEffect(() => {
+        const focusHandler = () => {
+            const input = inputRef.current;
+            if (!input) return;
+            input.focus();
+            input.select();
+        };
+        window.addEventListener(FOCUS_SEARCH_EVENT, focusHandler);
+        return () => window.removeEventListener(FOCUS_SEARCH_EVENT, focusHandler);
+    }, []);
+
 
     return (
         <div className={"search-bar"}>
@@ -29,6 +42,7 @@ export default function SearchBar({onSearch, onFilter, filtering}) {
             <form>
                 <br/>
                 <input
+                    ref={inputRef}
                     type="search"
                     name="search"
                     placeholder="Search by Route Name or Setter"

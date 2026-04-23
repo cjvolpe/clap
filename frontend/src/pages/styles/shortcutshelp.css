@@ -1,0 +1,133 @@
+.shortcuts-help-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.shortcuts-help-panel {
+    background: #fff;
+    color: #111;
+    border: 2px solid #000;
+    border-radius: 12px;
+    width: min(560px, 100%);
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+}
+
+.shortcuts-help-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.shortcuts-help-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.shortcuts-help-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 6px;
+    color: #333;
+}
+
+.shortcuts-help-close:hover {
+    color: #000;
+}
+
+.shortcuts-help-body {
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.shortcuts-help-group h3 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #555;
+    font-weight: 700;
+}
+
+.shortcuts-help-group ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.shortcuts-help-group li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+}
+
+.shortcuts-help-keys {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.shortcuts-help-keys kbd {
+    background: #f4f4f5;
+    border: 1px solid #d4d4d8;
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 2px 8px;
+    min-width: 22px;
+    text-align: center;
+    display: inline-block;
+    color: #111;
+}
+
+.shortcuts-help-sep {
+    font-size: 12px;
+    color: #777;
+    margin: 0 2px;
+}
+
+.shortcuts-help-desc {
+    color: #333;
+    font-size: 14px;
+    text-align: right;
+}
+
+.shortcuts-help-footer {
+    border-top: 1px solid #e5e5e5;
+    padding: 12px 20px;
+    font-size: 12px;
+    color: #555;
+}
+
+.shortcuts-help-footer kbd {
+    background: #f4f4f5;
+    border: 1px solid #d4d4d8;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 1px 6px;
+}
