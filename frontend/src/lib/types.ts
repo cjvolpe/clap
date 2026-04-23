@@ -28,6 +28,20 @@ export interface Log {
     climb: number;
 }
 
+export interface Achievement {
+    id: number;
+    code: string;
+    name: string;
+    description: string;
+    icon: string;
+    sort_order: number;
+}
+
+export interface AchievementStatus extends Achievement {
+    unlocked: boolean;
+    unlocked_at: string | null;
+}
+
 export const BACKEND_URL: string = 'http://localhost:8000';
 export const FRONTEND_URL: string = 'http://localhost:5173';
 

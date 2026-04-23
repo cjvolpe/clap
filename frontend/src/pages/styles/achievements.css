@@ -1,0 +1,119 @@
+.achievements-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-bottom: 96px;
+}
+
+.achievements-page .heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.achievements-page .heading h1 {
+    display: flex;
+    border: 3px solid black;
+    background-color: #EDCDB7;
+    padding: 4px 16px;
+    width: fit-content;
+}
+
+.achievements-page .progress {
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    padding: 8px 16px;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+@media only screen and (min-width: 600px) {
+    .badges-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .badges-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .badges-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.badge {
+    border: 3px solid black;
+    background-color: #EDCDB7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+    position: relative;
+}
+
+.badge.locked {
+    background-color: #D7D7D7;
+    color: #555;
+    filter: grayscale(0.5);
+}
+
+.badge .badge-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #B7D7ED;
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.badge.locked .badge-icon {
+    background-color: #C7C7C7;
+}
+
+.badge .badge-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.badge .badge-name {
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0;
+}
+
+.badge .badge-description {
+    font-size: 14px;
+    margin: 2px 0 0 0;
+}
+
+.badge .badge-date {
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: 0.7;
+}
+
+.achievements-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

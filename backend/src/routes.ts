@@ -13,6 +13,7 @@ import {
     ROPE_GRADES,
     BOULDER_GRADES, type Log
 } from "../../frontend/src/lib/types.ts";
+import {evaluateAndPersistUnlocks} from "./achievements.js";
 
 //TODO: add post request for claiming a set climb, and ticking a climb
 export function setupRoutes(server: FastifyInstance) {
@@ -68,6 +69,21 @@ export function setupRoutes(server: FastifyInstance) {
     }>("/climbs/log", async (req, res) => {
         const {reply, code} = await packageResponse(() => handleLog(req.body));
         res.status(code).send(reply);
+    });
+
+    server.get("/achievements", async (_req, res) => {
+        const {reply, code} = await packageResponse(() => handleAchievementCatalog());
+        return res.status(code).send(reply);
+    });
+
+    server.get("/achievements/:uuid", async (req, res) => {
+        const {reply, code} = await packageResponse(() => handleUserAchievements(req.params as { uuid?: string }));
+        return res.status(code).send(reply);
+    });
+
+    server.post("/achievements/evaluate", async (req, res) => {
+        const {reply, code} = await packageResponse(() => handleEvaluate(req.body as { user?: string }));
+        return res.status(code).send(reply);
     });
 
     async function handleFeaturedClimbs(): Promise<Task> {
@@ -212,6 +228,70 @@ export function setupRoutes(server: FastifyInstance) {
         }
     }
 
+    async function handleAchievementCatalog(): Promise<Process<any>> {
+        const {data, error} = await server.supabase
+            .from("achievements")
+            .select("*")
+            .order("sort_order", {ascending: true});
+        if (error) {
+            return {success: false, error: error, code: 500};
+        }
+        return {success: true, data: data};
+    }
+
+    async function handleUserAchievements(params: { uuid?: string }): Promise<Process<any>> {
+        const {uuid} = params;
+        if (!uuid) {
+            return {success: false, error: new Error("Missing user uuid"), code: 400};
+        }
+
+        const evalResult = await evaluateAndPersistUnlocks(server.supabase, uuid);
+        if ("error" in evalResult) {
+            return {success: false, error: evalResult.error, code: 500};
+        }
+
+        const {data: catalog, error: catalogError} = await server.supabase
+            .from("achievements")
+            .select("*")
+            .order("sort_order", {ascending: true});
+        if (catalogError) {
+            return {success: false, error: catalogError, code: 500};
+        }
+
+        const {data: unlocks, error: unlocksError} = await server.supabase
+            .from("user_achievements")
+            .select("achievement_id, unlocked_at")
+            .eq("user_id", uuid);
+        if (unlocksError) {
+            return {success: false, error: unlocksError, code: 500};
+        }
+
+        const unlockedMap = new Map<number, string>();
+        for (const row of unlocks ?? []) {
+            unlockedMap.set(row.achievement_id as number, row.unlocked_at as string);
+        }
+
+        const merged = (catalog ?? []).map(a => ({
+            ...a,
+            unlocked: unlockedMap.has(a.id as number),
+            unlocked_at: unlockedMap.get(a.id as number) ?? null,
+        }));
+
+        return {success: true, data: merged};
+    }
+
+    async function handleEvaluate(body: { user?: string }): Promise<Process<any>> {
+        const userId = body?.user;
+        if (!userId) {
+            return {success: false, error: new Error("Missing user"), code: 400};
+        }
+        const result = await evaluateAndPersistUnlocks(server.supabase, userId);
+        if ("error" in result) {
+            return {success: false, error: result.error, code: 500};
+        }
+        return {success: true, data: result.newlyUnlocked};
+    }
+
     async function handleLog(req: Log): Promise<Task> {
         const {user, climb} = req;
         const {data, error} = await server.supabase.from("completed_climbs").insert([{
@@ -221,6 +301,7 @@ export function setupRoutes(server: FastifyInstance) {
         if (error) {
             return {success: false, error: error, code: 500};
         }
+        await evaluateAndPersistUnlocks(server.supabase, user);
         return {success: true, data: data};
     }
 
