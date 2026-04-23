@@ -5,6 +5,7 @@ import type {Session} from "@supabase/supabase-js";
 import { supabaseClient} from "../util/supabaseClient.ts";
 import LoginPage from "./login.tsx";
 import ProtectedRoute from "./../components/ProtectedRoute";
+import InstallPrompt from "../components/InstallPrompt.tsx";
 
 import Home from "./home.tsx";
 import LogClimb from "./newclimb.tsx";
@@ -57,6 +58,7 @@ function Root() {
                 }
             />
         </Routes>
+        <InstallPrompt/>
     </BrowserRouter>);
 
 }
