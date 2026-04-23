@@ -5,6 +5,7 @@ import type {Session} from "@supabase/supabase-js";
 import { supabaseClient} from "../util/supabaseClient.ts";
 import LoginPage from "./login.tsx";
 import ProtectedRoute from "./../components/ProtectedRoute";
+import ShortcutsProvider from "./../components/ShortcutsProvider";
 
 import Home from "./home.tsx";
 import LogClimb from "./newclimb.tsx";
@@ -30,33 +31,35 @@ function Root() {
     if (loading) return <div> Loading...</div>
 
     return (<BrowserRouter>
-        <Routes>
-            <Route index element={<LoginPage/>}/>
-            <Route
-                path="/home"
-                element={
-                    <ProtectedRoute session={session}>
-                        <Home/>
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/logclimb"
-                element={
-                    <ProtectedRoute session={session}>
-                        <LogClimb/>
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/profile"
-                element={
-                    <ProtectedRoute session={session}>
-                        <Profile/>
-                    </ProtectedRoute>
-                }
-            />
-        </Routes>
+        <ShortcutsProvider>
+            <Routes>
+                <Route index element={<LoginPage/>}/>
+                <Route
+                    path="/home"
+                    element={
+                        <ProtectedRoute session={session}>
+                            <Home/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/logclimb"
+                    element={
+                        <ProtectedRoute session={session}>
+                            <LogClimb/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute session={session}>
+                            <Profile/>
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </ShortcutsProvider>
     </BrowserRouter>);
 
 }
