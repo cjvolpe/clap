@@ -14,6 +14,25 @@
     padding: 4px;
     width: fit-content;
 }
+
+.export-climbs-button {
+    border: 3px solid black;
+    background-color: #EDCDB7;
+    padding: 8px 16px;
+    margin-bottom: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.export-climbs-button:hover:not(:disabled) {
+    background-color: #d9b79a;
+}
+
+.export-climbs-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 .heading{
     display: flex;
     flex-direction: column;
