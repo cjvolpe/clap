@@ -95,7 +95,7 @@ export function setupRoutes(server: FastifyInstance) {
     }
 
 //TODO: Handle pictures
-    async function handleNewClimb(req: Climb): Promise<Task> {
+    async function handleNewClimb(req: Climb): Promise<Process<ClimbRecord[]>> {
         const {name, difficulty, type, color, setter, dateSet, gym} = req;
         const {data, error} = await server.supabase.from("climbs").insert([
             {
@@ -136,7 +136,7 @@ export function setupRoutes(server: FastifyInstance) {
     }
 
 //TODO: remove for loop
-    async function handleFilteredSearch(req: Search): Promise<Task> {
+    async function handleFilteredSearch(req: Search): Promise<Process<ClimbRecord[]>> {
         const {lowerDifficulty, upperDifficulty, type, color, startDate, endDate, gym, archived} = req;
         const query = server.supabase.from("climbs").select('*');
         let boulderList: string[] = Object.keys(BOULDER_GRADES);
